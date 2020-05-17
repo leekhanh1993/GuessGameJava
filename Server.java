@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 public class Server {
     private static Logger logger = Logger.getLogger(Server.class.getName());
-    private final static int NUMPPTOSTARTGAME = 4; // number of people to start the game
+    private final static int NUMPPTOSTARTGAME = 6; // number of people to start the game
     private final static int PORT = 61163;
     private final static String RECRUITMENT = "recruitment";
     private Socket connection;

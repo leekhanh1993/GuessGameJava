@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class Client {
-    private final static String ADDRESS = "localhost";
+    private final static String ADDRESS = "netprog1.csit.rmit.edu.au";
     private final static int PORT = 61163;
 
     private Socket connection;
