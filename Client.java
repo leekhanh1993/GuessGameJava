@@ -41,15 +41,16 @@ public class Client {
                     String userInput = reader.readLine();
                     sendToServer(userInput);
                 }
-                if (signal.equals("waiting") || signal.equals("ranking") 
-                || signal.equals("rankingr") || signal.equals("warning")) {
+                if (signal.equals("waiting") || signal.equals("ranking") || signal.equals("rankingr")
+                        || signal.equals("warning")) {
                     System.out.println(message);
                     sendToServer("ok");
                 }
                 if (signal.equals("playing")) {
                     System.out.println(message);
                     while (true) {
-                        System.out.println("You can type 'e' to quite the guess game.\nPlease enter your guess number: ");
+                        System.out
+                                .println("You can type 'e' to quite the guess game.\nPlease enter your guess number: ");
                         clientGuessNum = reader.readLine();
                         sendToServer(clientGuessNum);
                         serverMessage = readResponseFromServer(inputStream);
@@ -70,22 +71,6 @@ public class Client {
                     serverNotification.killProc();
                     status = false;
                 }
-
-                // warningClient = new WarningClient();
-                // warningClient.start();
-                // System.out.println("Please enter your guess number: ");
-                // clientGuessNum = reader.readLine();
-                // sendToServer(clientGuessNum);
-                // warningClient.killProc();
-                // serverMessage = readResponseFromServer(inputStream);
-                // String[] tmp = serverMessage.split("-");
-                // String signal = tmp[0];
-                // String message = tmp[1];
-                // if (signal.equals("stop")) {
-                // System.out.println(message);
-                // break;
-                // }
-                // System.out.println(message);
             }
 
         } catch (final NumberFormatException e) {

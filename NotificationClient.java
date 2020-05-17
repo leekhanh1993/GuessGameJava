@@ -17,11 +17,9 @@ public class NotificationClient extends Thread {
 
     @Override
     public void run() {
-        System.out.println("Notification are running.....");
         while (true) {
             String serverMessage = receiveDatagramPacket();
             if (serverMessage.equals("stop")) {
-                System.out.println("Notification Stop!!!!");
                 break;
             }
             System.out.println(serverMessage);

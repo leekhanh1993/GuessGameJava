@@ -25,6 +25,7 @@ public class PlayerHandler extends Thread {
     private String phase = PLAYING;
     private boolean status = true;
     private LocalDateTime completeGameTime;
+    private boolean isFinishGame = false;
     private boolean isBingo;
     private boolean isQuiteGame;
     private int clientAttemptCount = 0;
@@ -50,27 +51,29 @@ public class PlayerHandler extends Thread {
                 if (phase.equals(PLAYING)) {
                     int counter = 1;
                     do {
-                        //set timeout to remind player to enter secret number
+                        // set timeout to remind player to enter secret number
                         connection.setSoTimeout(10000);
                         String clientResponse = readClientRequest(inputStream);
-                        //reset inputstream after handle SocketTimeOutException when players do not send any response to the server.
-                        if(clientResponse.isEmpty()){
+                        // reset inputstream after handle SocketTimeOutException when players do not
+                        // send any response to the server.
+                        if (clientResponse.isEmpty()) {
                             connection.setSoTimeout(0);
                             counter--;
                             continue;
                         }
-                        //reset timeout if user send response to the server.
+                        // reset timeout if user send response to the server.
                         connection.setSoTimeout(0);
                         String result, conditionCode;
                         String tmp[];
                         int clientGuessNum;
                         if (clientResponse.equals("e")) {
                             this.isQuiteGame = true;
+                            this.isFinishGame = true;
                             this.phase = CONTINUEQ;
                             String quiteMessage = "stop-You has left the guess game!!!";
                             responseToClient(quiteMessage, outputStream);
                             logger.log(Level.INFO,
-                                    String.format("%s has left the guess game!!!!", this.player.nameGetter()));
+                                    String.format("%s give up the guess game!!!!", this.player.nameGetter()));
                             readClientRequest(inputStream);
                             break;
                         } else {
@@ -97,6 +100,7 @@ public class PlayerHandler extends Thread {
                             this.completeGameTime = LocalDateTime.now();
                             this.isBingo = true;
                             this.phase = RANKING;
+                            this.isFinishGame =true;
                             break;
                         }
                         if (conditionCode.equals("stopl")) {
@@ -109,6 +113,7 @@ public class PlayerHandler extends Thread {
                             this.completeGameTime = LocalDateTime.now();
                             this.isBingo = false;
                             this.phase = RANKING;
+                            this.isFinishGame =true;
                             this.clientAttemptCount += 1;
                             break;
                         }
@@ -129,10 +134,12 @@ public class PlayerHandler extends Thread {
                     if (readClientRequest(inputStream).equalsIgnoreCase("p")) {
                         this.connections.add(new PlayerHandler(this.connection, this.player, this.connections));
                         responseToClient("waiting-Waiting the server to start the game.........", outputStream);
+                        logger.log(Level.INFO, String.format("%s register to the game.", this.player.nameGetter()));
                         readClientRequest(inputStream);
                         this.status = false;
                     } else {
                         responseToClient("stop-Bye!!!", outputStream);
+                        logger.log(Level.INFO, String.format("%s left the game.", this.player.nameGetter()));
                         readClientRequest(inputStream);
                         this.status = false;
                         try {
@@ -195,6 +202,10 @@ public class PlayerHandler extends Thread {
             sb.append("Congratulation!");
         }
         return sb.toString();
+    }
+
+    public boolean isFinishGameGetter() {
+        return this.isFinishGame;
     }
 
     public boolean isQuiteGameGetter() {

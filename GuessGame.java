@@ -47,14 +47,11 @@ public class GuessGame extends Thread {
 
         // check round
         while (statusRound) {
-            boolean checkRound = true;
+            boolean checkRound = false;
             try {
                 Thread.sleep(5000);
                 for (PlayerHandler playerHandler : eachRoundPlayers) {
-                    if (playerHandler.phaseGetter().equals("ranking")
-                            || playerHandler.phaseGetter().equals("continueq")) {
-                        checkRound = false;
-                    } else {
+                    if (!playerHandler.isFinishGameGetter()) {
                         checkRound = true;
                     }
                 }
